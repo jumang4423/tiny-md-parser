@@ -7,8 +7,8 @@ pub enum Token {
   H3(String),
   List(String),
   Code{
-    lang: String,
-    code: String,
+    language: String,
+    codes: Vec<String>,
   },
   Emphasis(String),
   Image{

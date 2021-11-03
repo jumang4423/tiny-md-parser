@@ -27,6 +27,7 @@ impl<'a> Lexer<'a> {
       '#' => self.hash_lexer(),
       '!' => self.img_lexer(),
       '[' => self.link_lexer(),
+      '`' => self.code_lexer(),
       '-' => {
         self.read_char(); // self
         self.read_char(); // space
@@ -126,5 +127,28 @@ impl<'a> Lexer<'a> {
     let src = self.read_str_till(')');
     self.read_char();
     token::token::Token::Image { src, alt }
+  }
+
+  pub fn code_lexer(&mut self) -> token::token::Token {
+    if self.peek_char != '`' {
+      let str = self.read_str();
+      return token::token::Token::Identifier(str.to_string());
+    }
+    self.read_char(); // `
+    self.read_char(); // `
+    self.read_char(); // `
+    let language = self.read_str_till('\n');
+    let mut codes: Vec<String> = Vec::new();
+
+    while self.cur_char != '`' {
+      let code = self.read_str_till('\n');
+      codes.push(code);
+    }
+
+    self.read_str(); // ```
+    token::token::Token::Code {
+      language,
+      codes
+    }
   }
 }

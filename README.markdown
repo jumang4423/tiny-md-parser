@@ -10,7 +10,6 @@ md to html
 - [x] h2
 - [x] h3
 - [x] list
-- [] code
-- [] emphasis
+- [x] code
 - [x] images
 - [x] links
