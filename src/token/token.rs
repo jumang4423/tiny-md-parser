@@ -1,5 +1,5 @@
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Token {
   Identifier(String),
   H1(String),
@@ -10,7 +10,6 @@ pub enum Token {
     language: String,
     codes: Vec<String>,
   },
-  Emphasis(String),
   Image{
     src: String,
     alt: String,
@@ -19,5 +18,6 @@ pub enum Token {
     src: String,
     alt: String,
   },
+  Illegal,
   Eof
 }
