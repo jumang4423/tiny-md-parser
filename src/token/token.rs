@@ -6,6 +6,7 @@ pub enum Token {
   H2(String),
   H3(String),
   List(String),
+  Blockquote(String),
   Code{
     language: String,
     codes: Vec<String>,

@@ -33,19 +33,40 @@ impl<'a> Parser<'a> {
 
   pub fn get_html(&mut self) -> String {
     let mut html = String::new();
-    html.push_str("<body>\n");
+
+    html.push_str("
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+<link rel=\"stylesheet\" href=\"https://raw.githubusercontent.com/sindresorhus/github-markdown-css/main/github-markdown-light.css\">
+<style>
+  .markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 45px;
+  }
+
+  @media (max-width: 767px) {
+    .markdown-body {
+      padding: 15px;
+    }
+  }
+</style>\n");
+
+    html.push_str("<article class=\"markdown-body\">\n");
 
     while self.cur_token != token::token::Token::Eof {
       html.push_str(self.parse_html().as_str());
       self.next_token();
     }
 
-    html.push_str("</body>\n");
+    html.push_str("</article>\n");
     html
   }
 
   pub fn parse_html(&mut self) -> String {
     let mut html = String::new();
+    println!("TOKEN: {:?}", self.cur_token); // DEBUG
     match &self.cur_token {
       token::token::Token::H1(str) => {
         html = format!("  <h1>{}</h1>\n", str);
@@ -55,6 +76,9 @@ impl<'a> Parser<'a> {
       }
       token::token::Token::H3(str) => {
         html = format!("  <h3>{}</h3>\n", str);
+      }
+      token::token::Token::Blockquote(str) => {
+        html = format!("  <blockquote>{}</blockquote>\n", str);
       }
       token::token::Token::Identifier(str) => {
         if str == "" {
@@ -66,23 +90,24 @@ impl<'a> Parser<'a> {
       token::token::Token::List(str) => {
         html = format!("  <li> {} </li>\n", str);
       }
-      token::token::Token::Code{language, codes} => {
-
+      token::token::Token::Code { language, codes } => {
+        html.push_str("  <pre>\n");
+        html.push_str("    <code class=\"language-");
+        html.push_str(language);
+        html.push_str("\">\n");
         codes.iter().for_each(|code| {
-          html.push_str("  <pre>\n");
-          html.push_str("    <code class=\"language-");
-          html.push_str(language);
-          html.push_str("\">\n      ");
+          html.push_str("      ");
           html.push_str(code);
-          html.push_str("\n    </code>\n");
-          html.push_str("  </pre>\n");
+          html.push_str("\n");
         });
+        html.push_str("    </code>\n");
+        html.push_str("  </pre>\n");
       }
       token::token::Token::Image { src, alt } => {
-        html = format!("  <img src=\"{}\" alt=\"{}\"/>\n", src, alt);
+        html = format!("  <img width=\"100%\" src=\"{}\" alt=\"{}\"/>\n", src, alt);
       }
       token::token::Token::Link { src, alt } => {
-        html = format!("  <a src=\"{}\" alt=\"{}\"/>\n", src, alt);
+        html = format!("  <a href=\"{}\" alt=\"{}\" target=\"_blank\"> {} </a>\n", src, alt, alt);
       }
       _ => {}
     }

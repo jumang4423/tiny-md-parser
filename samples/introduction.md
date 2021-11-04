@@ -9,13 +9,15 @@ ryoma
 ## language i like
 
 - japanese
-- english
+* english
 - rust
+
+> i like to write code
 
 ![img](https://pbs.twimg.com/media/FDKj2XMacAAz70h?format=jpg&name=medium)
 
 
-[link](google.com)
+[link](https://www.google.com)
 
 ```rust
 a

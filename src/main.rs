@@ -27,9 +27,7 @@ fn main() -> Result<(), io::Error> {
 
             // print html
             println!("{}", parsed_html);
-
             println!("-! a.html saved in the same directory");
-
             let path = "a.html";
             let mut output = File::create(path)?;
             write!(output, "{}", parsed_html).unwrap();

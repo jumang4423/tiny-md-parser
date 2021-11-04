@@ -34,6 +34,18 @@ impl<'a> Lexer<'a> {
         let str = self.read_str();
         token::token::Token::List(str)
       }
+      '*' => {
+        self.read_char(); // self
+        self.read_char(); // space
+        let str = self.read_str();
+        token::token::Token::List(str)
+      }
+      '>' => {
+        self.read_char(); // self
+        self.read_char(); // space
+        let str = self.read_str();
+        token::token::Token::Blockquote(str)
+      }
       ZERO_CHAR => token::token::Token::Eof,
       _ => {
         let str = self.read_str();
@@ -78,7 +90,7 @@ impl<'a> Lexer<'a> {
   pub fn hash_lexer(&mut self) -> token::token::Token {
     if self.peek_char != ' ' && self.peek_char != '#' {
       self.read_str();
-      return token::token::Token::Illegal
+      return token::token::Token::Illegal;
     }
 
     let mut hashes: usize = 1;
@@ -115,11 +127,11 @@ impl<'a> Lexer<'a> {
   }
 
   pub fn img_lexer(&mut self) -> token::token::Token {
-    self.read_char(); // self
-    if self.cur_char != '[' {
-      return token::token::Token::Illegal
+    if self.peek_char != '[' {
+      return token::token::Token::Identifier(self.read_str());
     }
 
+    self.read_char(); // self
     self.read_char(); // [
 
     let alt = self.read_str_till(']');
@@ -131,8 +143,7 @@ impl<'a> Lexer<'a> {
 
   pub fn code_lexer(&mut self) -> token::token::Token {
     if self.peek_char != '`' {
-      self.read_str();
-      return token::token::Token::Illegal
+      return token::token::Token::Identifier(self.read_str());
     }
     self.read_char(); // `
     self.read_char(); // `
@@ -146,9 +157,6 @@ impl<'a> Lexer<'a> {
     }
 
     self.read_str(); // ```
-    token::token::Token::Code {
-      language,
-      codes
-    }
+    token::token::Token::Code { language, codes }
   }
 }
