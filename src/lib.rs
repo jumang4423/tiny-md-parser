@@ -3,7 +3,7 @@ mod parser;
 mod token;
 
 #[wasm_bindgen::prelude::wasm_bindgen]
-pub fn render_md(_lines: String) -> String {
+pub fn render_html(_lines: String) -> String {
   // add \n in the last sentense in _lines
   let lines = _lines.clone() + "\n";
   // lexer lines
