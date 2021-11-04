@@ -66,7 +66,6 @@ impl<'a> Parser<'a> {
 
   pub fn parse_html(&mut self) -> String {
     let mut html = String::new();
-    println!("TOKEN: {:?}", self.cur_token); // DEBUG
     match &self.cur_token {
       token::token::Token::H1(str) => {
         html = format!("  <h1>{}</h1>\n", str);
@@ -78,7 +77,7 @@ impl<'a> Parser<'a> {
         html = format!("  <h3>{}</h3>\n", str);
       }
       token::token::Token::Blockquote(str) => {
-        html = format!("  <blockquote>{}</blockquote>\n", str);
+        html = format!("  <blockquote><p>{}</p></blockquote>\n", str);
       }
       token::token::Token::Identifier(str) => {
         if str == "" {
@@ -90,13 +89,15 @@ impl<'a> Parser<'a> {
       token::token::Token::List(str) => {
         html = format!("  <li> {} </li>\n", str);
       }
-      token::token::Token::Code { language, codes } => {
+      token::token::Token::NumList{num, identifier} => {
+        html = format!("  <ol class=\"numbered-list\">{}. {}</ol>\n", num, identifier);
+      }
+      token::token::Token::Code { language: _, codes } => {
         html.push_str("  <pre>\n");
-        html.push_str("    <code class=\"language-");
-        html.push_str(language);
-        html.push_str("\">\n");
+
+        html.push_str("    <code>\n");
         codes.iter().for_each(|code| {
-          html.push_str("      ");
+          html.push_str("       ");
           html.push_str(code);
           html.push_str("\n");
         });
@@ -107,9 +108,14 @@ impl<'a> Parser<'a> {
         html = format!("  <img width=\"100%\" src=\"{}\" alt=\"{}\"/>\n", src, alt);
       }
       token::token::Token::Link { src, alt } => {
-        html = format!("  <a href=\"{}\" alt=\"{}\" target=\"_blank\"> {} </a>\n", src, alt, alt);
+        html = format!(
+          "  <a href=\"{}\" alt=\"{}\" target=\"_blank\"> {} </a>\n",
+          src, alt, alt
+        );
       }
-      _ => {}
+      _ => {
+        html = format!("{:?}", self.cur_token);
+      }
     }
     html
   }

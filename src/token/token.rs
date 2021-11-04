@@ -7,6 +7,10 @@ pub enum Token {
   H3(String),
   List(String),
   Blockquote(String),
+  NumList{
+    num: String,
+    identifier: String,
+  },
   Code{
     language: String,
     codes: Vec<String>,

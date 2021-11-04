@@ -2,9 +2,11 @@
 
 ryoma
 
-## age
+## more details
 
-18
+1. 20
+2. male
+3. not vargin
 
 ## language i like
 

@@ -9,7 +9,7 @@ md to html
 - [x] h1
 - [x] h2
 - [x] h3
-- [x] list
+- [x] list ( also numbered list )
 - [x] code
 - [x] images
 - [x] links
@@ -20,8 +20,8 @@ md to html
 - [x] h1
 - [x] h2
 - [x] h3
-- [x] list
+- [x] list ( also numbered list )
 - [x] code
 - [x] images
 - [x] links
-- [ ] blockquote
+- [x] blockquote

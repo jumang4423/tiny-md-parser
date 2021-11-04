@@ -1,5 +1,4 @@
 use super::super::token;
-
 const ZERO_CHAR: char = '\u{0}';
 
 #[derive(Debug, Clone)]
@@ -48,6 +47,11 @@ impl<'a> Lexer<'a> {
       }
       ZERO_CHAR => token::token::Token::Eof,
       _ => {
+
+        if self.cur_char.is_numeric() {
+          return self.number_lexer()
+        } 
+
         let str = self.read_str();
         token::token::Token::Identifier(str)
       }
@@ -158,5 +162,18 @@ impl<'a> Lexer<'a> {
 
     self.read_str(); // ```
     token::token::Token::Code { language, codes }
+  }
+
+  pub fn number_lexer(&mut self) -> token::token::Token {
+    if self.peek_char != '.' {
+      token::token::Token::Identifier(self.read_str())
+    } else {
+      // must be a 1. <str>
+      let num: String = self.read_char().to_string();
+      self.read_char(); // .
+      self.read_char(); // space
+      let identifier = self.read_str();
+      token::token::Token::NumList{num, identifier}
+    }
   }
 }
